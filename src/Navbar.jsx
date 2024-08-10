@@ -3,7 +3,7 @@ import { LiaShoppingBagSolid } from "react-icons/lia";
 
 function Navbar({ cartcount }) {
   return (
-    <div className="fixed top-0 left-0 right-0 flex justify-between items-center px-4 sm:px-40 py-4 bg-white shadow-md z-50">
+    <div className=" flex justify-between items-center px-4 sm:px-40 py-4 bg-white shadow-md z-50">
       <picture>
         <source
           media="(max-width: 640px)"
