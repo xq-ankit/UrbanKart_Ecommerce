@@ -36,7 +36,7 @@
     "dlv": "^1.1.3",
     "electron-to-chromium": "^1.4.217",
     "error-ex": "^1.3.2",
-    "esbuild": "^0.15.18",
+    "esbuild": "^0.23.0",
     "esbuild-windows-64": "^0.15.17",
     "escalade": "^3.1.1",
     "escape-string-regexp": "^1.0.5",
@@ -123,13 +123,12 @@
     "yaml": "^1.10.2",
     "yup": "^1.4.0"
   },
- "scripts": {
-  "dev": "vite",
-  "build": "vite build",
-  "serve": "vite preview",
-  "test": "echo \"Error: no test specified\" && exit 1"
-},
-
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
