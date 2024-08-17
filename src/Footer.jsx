@@ -1,7 +1,7 @@
 import React from 'react';
 function Footer(){
 return(
-  <div className="flex bg-gray-600 px-40 py-4 justify-between text-xs text-white">
+  <div className="flex bg-gray-600 px-40 py-4 justify-between text-xs text-white min-w-full">
     <h1>
       Copyright © 2024 | xq_ankit
     </h1>

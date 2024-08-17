@@ -32,6 +32,7 @@ function SignUp() {
     },
     onSubmit: callSignUpApi,
     validationSchema: schema,
+    validateOnMount:true
   });
 
   return (
@@ -176,7 +177,7 @@ function SignUp() {
           <div className="flex flex-col space-y-4">
             <button
               type="submit"
-              disabled={dirty && !isValid}
+              disabled={!(dirty && isValid)}
               className="bg-blue-600 text-white py-2 px-6 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:bg-blue-300"
             >
               Sign Up

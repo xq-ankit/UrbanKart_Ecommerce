@@ -51,7 +51,7 @@ function ForgotPassword() {
           <div className="flex flex-col space-y-4">
             <button
               type="submit"
-              disabled={dirty && !isValid}
+              disabled={!(dirty && isValid)}
               className="bg-indigo-600 text-white py-2 px-6 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:bg-indigo-300"
             >
               Reset Password

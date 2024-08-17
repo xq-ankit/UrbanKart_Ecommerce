@@ -1,17 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { HiArrowLeft, HiChevronDoubleRight, HiChevronDoubleLeft } from "react-icons/hi";
 import { getProductData } from "./api";
 import LoadingPage from "./LoadingPage";
 import ErrorPage from "./ErrorPage";
+import { cartContext } from "./App";
 
-function ProductDetails({ onAddtoCart }) {
+function ProductDetails() {
   const [details, setDetails] = useState(null);
   const [Loading, setLoading] = useState(true);
   const { id } = useParams();
   const productId = +id;
   const [quantity, setQuantity] = useState(getPreviousQuantity());
-
+  const onAddtoCart = useContext(cartContext);
   useEffect(function () {
     const d = getProductData(productId);
     d.then(function (response) {
@@ -37,7 +38,7 @@ function ProductDetails({ onAddtoCart }) {
       localStorage.setItem(id, val.toString());
     }
   };
-
+ 
   function handleAddtoCart() {
     onAddtoCart(productId, quantity);
   }
@@ -71,7 +72,7 @@ function ProductDetails({ onAddtoCart }) {
               {details.category}
             </h1>
             <h3 className="text-2xl font-black text-gray-700 mb-5">
-              ${details.price}
+            ₹{details.price}
             </h3>
             <p className="text-gray-500 mb-5 text-xl">
               {details.description}

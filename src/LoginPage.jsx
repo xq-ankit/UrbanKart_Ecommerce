@@ -1,4 +1,4 @@
-import { useFormik } from "formik";
+import { Formik,Form } from "formik";
 import React from "react";
 import * as Yup from "yup";
 import { Link } from "react-router-dom";
@@ -15,22 +15,24 @@ function Login() {
       .required("Required"),
   });
 
-  const { isValid, dirty, handleChange, handleSubmit, values, resetForm, errors, handleBlur, touched } = useFormik({
-    initialValues: {
+  const initialValues= {
       email: "",
       password: "",
-    },
-    onSubmit: callLoginApi,
-    validationSchema: schema,
-  });
-
+    };
+    
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-gray-100 to-gray-200">
       <div className="bg-white p-8 md:p-10 lg:p-12 rounded-lg shadow-lg w-full max-w-md min-h-[450px]">
         <h2 className="text-2xl md:text-3xl font-bold mb-6 text-gray-800 text-center">
           Welcome Back to UrbanCart
         </h2>
-        <form onSubmit={handleSubmit} className="space-y-6">
+      <Formik
+      initialValues={initialValues}
+      onSubmit={callLoginApi}
+      validationSchema={schema}
+      validateOnMount:true
+      >
+        <Form className="space-y-6">
           <div>
             <label
               htmlFor="email"
@@ -77,7 +79,7 @@ function Login() {
           <div className="flex flex-col space-y-4">
             <button
               type="submit"
-              disabled={dirty && !isValid}
+              disabled={!(dirty && isValid)}
               className="bg-indigo-600 text-white py-2 px-6 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:bg-indigo-300"
             >
               Login
@@ -98,7 +100,8 @@ function Login() {
               Create an Account
             </Link>
           </div>
-        </form>
+        </Form>
+        </Formik>
       </div>
     </div>
   );
