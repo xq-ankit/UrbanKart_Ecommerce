@@ -2,8 +2,12 @@ import { useFormik } from "formik";
 import React from "react";
 import * as Yup from "yup";
 import { Link } from "react-router-dom";
+import withUser from "./withUser";
 
-function ForgotPassword() {
+
+function ForgotPassword( user) {
+  
+
   function callForgotPasswordApi(values) {
     console.log("Sending reset password request for:", values.email);
   }
@@ -71,4 +75,4 @@ function ForgotPassword() {
   );
 }
 
-export default ForgotPassword;
+export default withUser(ForgotPassword);

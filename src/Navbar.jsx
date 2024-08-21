@@ -4,15 +4,15 @@ import { Link } from 'react-router-dom';
 
 function Navbar({ cartcount }) {
   return (
-    <div className=" flex justify-between items-center px-4 sm:px-40 py-4 bg-white shadow-md z-50 min-w-full">
+    <div className="flex justify-between items-center px-4 sm:px-40 py-4 bg-white shadow-md z-50 min-w-full">
       <picture>
         <source
           media="(max-width: 640px)"
-          srcSet="https://www.fineprintart.com/images/blog/amazon-logo/amazon_logo_history_5.jpg"
+          srcSet="./img/mini_logo.png"
           className="h-10"
         />
         <img
-          src="https://www.pngall.com/wp-content/uploads/13/Amazon-Logo-PNG.png"
+          src="./img/main_logo.png"
           className="h-10 md:h-16"
           alt="Amazon Logo"
         />

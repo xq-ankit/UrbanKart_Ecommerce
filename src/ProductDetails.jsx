@@ -4,9 +4,13 @@ import { HiArrowLeft, HiChevronDoubleRight, HiChevronDoubleLeft } from "react-ic
 import { getProductData } from "./api";
 import LoadingPage from "./LoadingPage";
 import ErrorPage from "./ErrorPage";
-import { cartContext } from "./App";
+import { cartContext, } from "./App";
+import withUser from "./withUser";
+
 
 function ProductDetails() {
+
+
   const [details, setDetails] = useState(null);
   const [Loading, setLoading] = useState(true);
   const { id } = useParams();
@@ -115,4 +119,4 @@ function ProductDetails() {
   );
 }
 
-export default ProductDetails;
+export default withUser( ProductDetails);

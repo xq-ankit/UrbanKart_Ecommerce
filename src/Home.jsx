@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import ProductList from './ProductList';
 import Page from './Page';
-// import alldata from './DummyData'; 
 import { getProductList } from './api';
+import withUser from "./withUser";
 
-function Home() {
+function Home(user) {
+
+
+
   const [query, setQuery] = useState("Default");
   const [data, setData] = useState([]);
 
@@ -64,4 +67,4 @@ function Home() {
 }
   
 
-export default Home;
+export default withUser(Home);

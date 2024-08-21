@@ -2,8 +2,11 @@ import { useFormik } from "formik";
 import React from "react";
 import * as Yup from "yup";
 import { Link } from "react-router-dom";
+import withUser from "./withUser";
+
 
 function SignUp() {
+ 
   function callSignUpApi(values) {
     console.log("Sending sign-up details", values);
   }
@@ -201,4 +204,4 @@ function SignUp() {
   );
 }
 
-export default SignUp;
+export default withUser(SignUp);
