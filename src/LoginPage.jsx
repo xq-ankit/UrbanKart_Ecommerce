@@ -4,9 +4,7 @@ import * as Yup from "yup";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import withUser from "./withUser";
-function Login(props,user) {
-  
-
+function Login() {
   function callLoginApi(values) {
      axios
        .post("https://myeasykart.codeyogi.io/login", {
@@ -19,7 +17,7 @@ function Login(props,user) {
          props.setUser(user);
        })
        .catch((error) => {
-         console.log("invalid Credential");
+         console.log("invalid Credential",error);
        });
    }
 
