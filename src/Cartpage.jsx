@@ -1,18 +1,19 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, useContext } from "react";
 import { getProductData } from "./api";
 import { IoIosRemoveCircleOutline } from "react-icons/io";
 import LoadingPage from "./LoadingPage";
-import { Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 import withUser from "./withUser";
+import { cartContext } from "./contexts";
 
-function Cartpage({ cart, updateCart }) { 
+function Cartpage() {
+  const { cartDetails, updateCart } = useContext(cartContext);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const memoizedCart = useMemo(() => cart, [cart]);
+  const memoizedCart = useMemo(() => cartDetails, [cartDetails]);
   const [localCart, setLocalCart] = useState(memoizedCart);
   const productId = Object.keys(memoizedCart);
 
-  
   useEffect(() => {
     setLocalCart(memoizedCart);
   }, [memoizedCart]);
@@ -20,8 +21,8 @@ function Cartpage({ cart, updateCart }) {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const myallproductpromise = productId.map((id) => getProductData(id));
-        const productsData = await Promise.all(myallproductpromise);
+        const myAllProductPromise = productId.map((id) => getProductData(id));
+        const productsData = await Promise.all(myAllProductPromise);
         setProducts(productsData);
       } catch (error) {
         console.error("Failed to fetch products", error);
@@ -42,11 +43,9 @@ function Cartpage({ cart, updateCart }) {
     delete newCart[productId];
     updateCart(newCart);
     setLocalCart(newCart);
-  // Ensure state updates or force re-render when the cart becomes empty 
-// to properly reflect changes in the UI.
-   if (Object.keys(newCart).length === 0) {
-    setProducts([]); 
-  }
+    if (Object.keys(newCart).length === 0) {
+      setProducts([]);
+    }
   }
 
   function updateMyCart() {
@@ -54,9 +53,9 @@ function Cartpage({ cart, updateCart }) {
   }
 
   function handleChange(event) {
-    const newval = +event.target.value;
+    const newVal = +event.target.value;
     const productId = event.target.getAttribute("productId");
-    const newLocalCart = { ...localCart, [productId]: newval };
+    const newLocalCart = { ...localCart, [productId]: newVal };
     setLocalCart(newLocalCart);
   }
 

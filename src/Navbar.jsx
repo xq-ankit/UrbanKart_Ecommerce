@@ -1,9 +1,11 @@
-import React from 'react';
+import React,{useContext} from 'react';
 import { LiaShoppingBagSolid } from "react-icons/lia";
 import { Link } from 'react-router-dom';
 import withUser from './withUser';
+import { cartContext } from './contexts';
 
-function Navbar({ cartcount }) {
+function Navbar() {
+  const{cartcount}=useContext(cartContext);
   return (
     <div className="flex justify-between items-center px-4 sm:px-40 py-4 bg-white shadow-md z-50 min-w-full">
       <picture>

@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { userContext } from './contexts';
+import { userContext } from './contexts.js';
 
 function withUser(IncomingComponent) {
   return function OutgoingComponent(props) {
