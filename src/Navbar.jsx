@@ -1,6 +1,7 @@
 import React from 'react';
 import { LiaShoppingBagSolid } from "react-icons/lia";
 import { Link } from 'react-router-dom';
+import withUser from './withUser';
 
 function Navbar({ cartcount }) {
   return (
@@ -14,7 +15,7 @@ function Navbar({ cartcount }) {
         <img
           src="./img/main_logo.png"
           className="h-10 md:h-16"
-          alt="Amazon Logo"
+          alt="Logo"
         />
       </picture>
       <div className="relative">
@@ -29,4 +30,4 @@ function Navbar({ cartcount }) {
   );
 }
 
-export default Navbar;
+export default withUser(Navbar);

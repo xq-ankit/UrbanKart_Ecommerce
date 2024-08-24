@@ -1,25 +1,37 @@
-import { Formik, Form, Field} from "formik";
-import React from "react";
-import * as Yup from "yup";
-import { Link } from "react-router-dom";
-import axios from "axios";
-import withUser from "./withUser";
-function Login() {
+import React from 'react';
+import { Formik, Form, Field } from 'formik';
+import * as Yup from 'yup';
+import { Link, Navigate, useLocation } from 'react-router-dom';
+import axios from 'axios';
+import withUser from './withUser';
+import withAlert from './withAlert';
+
+function Login({ user, setUser,setAlert }) {
+  const location = useLocation(); // here i am getting  the current location
+  const from = location.state?.from?.pathname || "/"; // and if any previous path exist direct there or default to "/"
+
   function callLoginApi(values) {
-     axios
-       .post("https://myeasykart.codeyogi.io/login", {
-         email: values.email,
-         password: values.password,
-       })
-       .then((response) => {
-         const { user, token } = response.data;
-         localStorage.setItem("token", token);
-         props.setUser(user);
-       })
-       .catch((error) => {
-         console.log("invalid Credential",error);
-       });
-   }
+    console.log(values.email, values.password);
+    axios
+      .post("https://myeasykart.codeyogi.io/login", {
+        email: values.email,
+        password: values.password,
+      })
+      .then((response) => {
+        const { user, token } = response.data;
+        localStorage.setItem("token", token);
+        setUser(user);
+        setAlert({type:"success",message:"Successfully Login"});
+      })
+      .catch(() => {
+        setAlert({type:"error",message:"Invalid email or password"});
+      });
+  }
+
+  // If the user is logged in, redirect to the original route or homepage
+  if (user) {
+    return <Navigate to={from} />;
+  }
 
   const schema = Yup.object().shape({
     email: Yup.string().email("Invalid email").required("Required"),
@@ -45,23 +57,10 @@ function Login() {
           validationSchema={schema}
           validateOnMount
         >
-          {({
-            handleChange,
-            handleBlur,
-            values,
-            touched,
-            errors,
-            isValid,
-            dirty,
-            resetForm,
-            setSubmitting,
-          }) => (
+          {({ handleChange, handleBlur, values, touched, errors, isValid, dirty, resetForm }) => (
             <Form className="space-y-6">
               <div>
-                <label
-                  htmlFor="email"
-                  className="block text-gray-700 font-medium mb-2 sr-only"
-                >
+                <label htmlFor="email" className="block text-gray-700 font-medium mb-2 sr-only">
                   Email
                 </label>
                 <Field
@@ -77,10 +76,7 @@ function Login() {
               </div>
 
               <div>
-                <label
-                  htmlFor="password"
-                  className="block text-gray-700 font-medium mb-2 sr-only"
-                >
+                <label htmlFor="password" className="block text-gray-700 font-medium mb-2 sr-only">
                   Password
                 </label>
                 <Field
@@ -111,16 +107,10 @@ function Login() {
                 </button>
               </div>
               <div className="flex justify-between items-center mt-4">
-                <Link
-                  to="/forgot-password"
-                  className="text-sm md:text-base text-indigo-600 hover:underline"
-                >
+                <Link to="/forgot-password" className="text-sm md:text-base text-indigo-600 hover:underline">
                   Forgot Password?
                 </Link>
-                <Link
-                  to="/sign-up"
-                  className="text-sm md:text-base text-indigo-600 hover:underline"
-                >
+                <Link to="/sign-up" className="text-sm md:text-base text-indigo-600 hover:underline">
                   Create an Account
                 </Link>
               </div>
@@ -132,4 +122,4 @@ function Login() {
   );
 }
 
-export default withUser(Login);
+export default withAlert(withUser(Login));

@@ -1,12 +1,15 @@
-import React from "react";
-import { Navigate } from "react-router";
-import withUser from "./withUser";
+import React from 'react';
+import { Navigate, useLocation } from 'react-router-dom';
+import withUser from './withUser';
 
+function UserRoute({ children, user }) {
+  const location = useLocation();
+  
+  if (!user) {
+    return <Navigate to="/login" state={{ from: location }} />;
+  }
 
-function useRoute({children,user}){
-    if(!user){
-        return <Navigate to="/login"/>;
-    }
-    return children
+  return children;
 }
-export default withUser(useRoute);
+
+export default withUser(UserRoute);

@@ -10,7 +10,7 @@ function ProductList({products}) {
       thumbnail={item.thumbnail}
       category={item.category}
       title={item.title}
-      price={`₹${item.price}`}
+      price={`₹ ${item.price}`}
       id={item.id}
       />
   );

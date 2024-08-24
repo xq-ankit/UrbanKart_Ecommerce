@@ -4,10 +4,7 @@ import * as Yup from "yup";
 import { Link } from "react-router-dom";
 import withUser from "./withUser";
 
-
-function ForgotPassword( user) {
-  
-
+function ForgotPassword() {
   function callForgotPasswordApi(values) {
     console.log("Sending reset password request for:", values.email);
   }

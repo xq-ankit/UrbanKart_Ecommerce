@@ -1,14 +1,40 @@
 import { useFormik } from "formik";
-import React from "react";
+import React, { useState } from "react";
 import * as Yup from "yup";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import withUser from "./withUser";
+import withAlert from "./withAlert";
+import axios from "axios";
 
+function SignUp({setAlert }) {
+  const navigate = useNavigate();
+  const [user, setUser] = useState(null);
 
-function SignUp() {
- 
   function callSignUpApi(values) {
+    const fullName = `${values.firstName.trim()} ${values.lastName.trim()}`;
     console.log("Sending sign-up details", values);
+
+    axios
+      .post("https://myeasykart.codeyogi.io/signup", {
+        fullName,
+        email: values.email,
+        password: values.password,
+      })
+      .then((response) => {
+        console.log("Successfully signed up");
+        setUser({ fullName });
+        navigate("/login");
+        setAlert({
+          type: "success",
+          message: `Welcome ${fullName}!`,
+        });
+      })
+      .catch(() => {
+        setAlert({
+          type: "Already",
+          message: "Email already exists!",
+        });
+      });
   }
 
   const schema = Yup.object().shape({
@@ -20,11 +46,21 @@ function SignUp() {
       .min(8, "Password should be at least 8 characters")
       .required("Password is required"),
     confirmPassword: Yup.string()
-      .oneOf([Yup.ref('password'), null], 'Passwords must match')
+      .oneOf([Yup.ref("password"), null], "Passwords must match")
       .required("Confirm password is required"),
   });
 
-  const { isValid, dirty, handleChange, handleSubmit, values, resetForm, errors, handleBlur, touched } = useFormik({
+  const {
+    isValid,
+    dirty,
+    handleChange,
+    handleSubmit,
+    values,
+    resetForm,
+    errors,
+    handleBlur,
+    touched,
+  } = useFormik({
     initialValues: {
       username: "",
       firstName: "",
@@ -35,7 +71,7 @@ function SignUp() {
     },
     onSubmit: callSignUpApi,
     validationSchema: schema,
-    validateOnMount:true
+    validateOnMount: true,
   });
 
   return (
@@ -204,4 +240,4 @@ function SignUp() {
   );
 }
 
-export default withUser(SignUp);
+export default withAlert(withUser(SignUp));

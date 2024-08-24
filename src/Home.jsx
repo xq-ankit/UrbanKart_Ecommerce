@@ -2,12 +2,8 @@ import React, { useEffect, useState } from 'react';
 import ProductList from './ProductList';
 import Page from './Page';
 import { getProductList } from './api';
-import withUser from "./withUser";
 
-function Home(user) {
-
-
-
+function Home() {
   const [query, setQuery] = useState("Default");
   const [data, setData] = useState([]);
 
@@ -65,6 +61,6 @@ function Home(user) {
     </div>
   );
 }
-  
 
-export default withUser(Home);
+
+export default Home;

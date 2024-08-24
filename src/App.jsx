@@ -1,92 +1,92 @@
-import React, { useEffect, useState } from 'react';
-import {Routes, Route } from "react-router-dom";
-import Home from './Home';
-import Navbar from './Navbar';
-import axios from 'axios';
-import Footer from './Footer';
-import ProductDetails from './ProductDetails';
-import ErrorPage from './ErrorPage';
-import Login from './LoginPage';
-import SignUp from './Signup';
-import Cartpage from './Cartpage';
-import ForgotPassword from './ForgetPassword';
-import LoadingPage from "./LoadingPage";
-import AuthRoute from './AuthRoute';
-
-// Create a Context for the cart
-export const cartContext = React.createContext();
-export const userContext = React.createContext();
+import React, { useEffect, useState } from "react";
+import { Routes, Route } from "react-router-dom";
+import Home from "./Home";
+import Navbar from "./Navbar";
+import Footer from "./Footer";
+import ProductDetails from "./ProductDetails";
+import ErrorPage from "./ErrorPage";
+import Login from "./LoginPage";
+import SignUp from "./Signup";
+import Cartpage from "./Cartpage";
+import ForgotPassword from "./ForgetPassword";
+import { cartContext, userContext, AlertContext } from "./contexts";
+import AuthRoute from "./AuthRoute";
+import UserRoute from "./UserRoute";
+import Alert from "./Alert";
 
 function App() {
-  const [Loading, setLoading] = useState(true);
-  const SavedStringObject = localStorage.getItem("my-cart") || "{}";
-  const SavedObject = JSON.parse(SavedStringObject);
-  const [user,setUser]=useState()
-  console.log("logged in".user);
-  const token =localStorage.getItem("token");
+  const savedStringObject = localStorage.getItem("my-cart") || "{}";
+  const savedObject = JSON.parse(savedStringObject);
+  const [user, setUser] = useState(null);
+  const [alert, setAlert] = useState(null);
+  const [cartDetails, setCartDetails] = useState(savedObject);
 
-  useEffect(()=>{
-    if(token){
-   axios.get("https://myeasykart.codeyogi.io/me"),{
-    headers:{
-      Authorization:token},
-   }.then((response)=>{
-    setLoading(false);
-   })
-  } else{
-    setLoading(false);
-  }
-},[]);  
-
-if(Loading){
-  return <LoadingPage/>
-}
-
-
-  // State to manage cart details
-  const [cartdetails, setCartDetails] = useState(SavedObject);
-
-  // Function to add items to cart
-  const onAddtoCart = (productId, count) => {
-    const oldcount = cartdetails[productId] || 0;
-    const newCartdetails = { ...cartdetails, [productId]: count + oldcount };
-    updateCart(newCartdetails);
+  const onAddToCart = (productId, count) => {
+    const oldCount = cartDetails[productId] || 0;
+    const newCartDetails = { ...cartDetails, [productId]: count + oldCount };
+    updateCart(newCartDetails);
   };
 
-  // Function to update cart and save to localStorage
-  function updateCart(newCartdetails) {
-    setCartDetails(newCartdetails);
-    const StingObject = JSON.stringify(newCartdetails);
-    localStorage.setItem("my-cart", StingObject);
+  useEffect(() => {
+    localStorage.removeItem("my-cart");
+    localStorage.clear();
+  }, []);
+
+  function updateCart(newCartDetails) {
+    setCartDetails(newCartDetails);
+    const stringObject = JSON.stringify(newCartDetails);
+    localStorage.setItem("my-cart", stringObject);
   }
 
-  // Calculate total item count in cart
-  const totalCount = Object.keys(cartdetails).reduce((acc, curr) => {
-    return acc + cartdetails[curr];
-  }, 0);
+  const removeAlert = () => {
+    setAlert(null);
+  };
+
+  const totalCount = Object.keys(cartDetails).reduce(
+    (acc, curr) => acc + cartDetails[curr],
+    0
+  );
 
   return (
     <div className="flex flex-col justify-center items-center bg-gray-100 min-h-screen">
-      <Navbar cartcount={totalCount} />
-      <cartContext.Provider value={onAddtoCart}>
-        <userContext.Provider value={{user,setUser}}>
-        <Routes>
-          <UserRoute>
-         
-          <Route path="/product/:id" element={<ProductDetails />} />
-          <Route path="/login" element={<Login setUser={setUser}/>} />
-          <Route path="/cart" element={<Cartpage cart={cartdetails} updateCart={updateCart} />} />
-          <Route path="/sign-up" element={<SignUp />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          </UserRoute>
-
-          <AuthRoute>
-          <Route path="/" element={<Home />} />
-          </AuthRoute>
-          <Route path="*" element={<ErrorPage />} />
-        </Routes>
-        </userContext.Provider>
-      </cartContext.Provider>
+      <userContext.Provider value={{ user, setUser }}>
+        <AlertContext.Provider value={{ alert, setAlert, removeAlert }}>
+          <Navbar cartcount={totalCount} />
+          <Alert />
+          <cartContext.Provider value={{ cartDetails, onAddToCart, updateCart }}>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/product/:id" element={<ProductDetails />} />
+              <Route
+                path="/login"
+                element={
+                  <AuthRoute>
+                    <Login />
+                  </AuthRoute>
+                }
+              />
+              <Route
+                path="/sign-up"
+                element={
+                  <AuthRoute>
+                    <SignUp />
+                  </AuthRoute>
+                }
+              />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route
+                path="/cart"
+                element={
+                  <UserRoute>
+                    <Cartpage cart={cartDetails} updateCart={updateCart} />
+                  </UserRoute>
+                }
+              />
+              <Route path="*" element={<ErrorPage />} />
+            </Routes>
+          </cartContext.Provider>
+        </AlertContext.Provider>
+      </userContext.Provider>
       <Footer />
     </div>
   );
