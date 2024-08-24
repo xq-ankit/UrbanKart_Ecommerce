@@ -6,9 +6,9 @@ import withUser from "./withUser";
 import withAlert from "./withAlert";
 import axios from "axios";
 
-function SignUp({setAlert }) {
-  const navigate = useNavigate();
+function SignUp({ setAlert }) {
   const [user, setUser] = useState(null);
+  const navigate = useNavigate(); // Initialize the navigate function
 
   function callSignUpApi(values) {
     const fullName = `${values.firstName.trim()} ${values.lastName.trim()}`;
@@ -21,17 +21,18 @@ function SignUp({setAlert }) {
         password: values.password,
       })
       .then((response) => {
-        console.log("Successfully signed up");
-        setUser({ fullName });
-        navigate("/login");
+        const { user, token } = response.data;
+        localStorage.setItem("token", token);
+        setUser(user);
         setAlert({
           type: "success",
           message: `Welcome ${fullName}!`,
         });
+        navigate("/"); // Redirect to home page
       })
       .catch(() => {
         setAlert({
-          type: "Already",
+          type: "error",
           message: "Email already exists!",
         });
       });

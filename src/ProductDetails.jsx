@@ -17,7 +17,9 @@ function ProductDetails() {
   const [details, setDetails] = useState(null);
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(getPreviousQuantity());
-  const onAddtoCart = useContext(cartContext);
+  
+  // Correctly destructure onAddToCart from cartContext
+  const { onAddToCart } = useContext(cartContext);
 
   useEffect(() => {
     const fetchProductData = async () => {
@@ -48,7 +50,7 @@ function ProductDetails() {
   };
 
   const handleAddtoCart = () => {
-    onAddtoCart(productId, quantity);
+    onAddToCart(productId, quantity);
   };
 
   if (loading) {
