@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import ProductList from "./ProductList";
-import { getList } from "./api";
+import { getProductList } from "./api";
 import { HiArrowNarrowLeft, HiArrowNarrowRight } from "react-icons/hi";
 import { range } from "lodash";
 import { useSearchParams, Link } from "react-router-dom";
@@ -33,7 +33,7 @@ function Home() {
       sortBy = "price";
       sortType = "desc";
     }
-    getList(sortBy, query, page, sortType).then(function (xyz) {
+    getProductList(sortBy, query, page, sortType).then(function (xyz) {
       setProList(xyz);
       setLoading(false);
     });
