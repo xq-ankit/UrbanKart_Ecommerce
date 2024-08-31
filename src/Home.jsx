@@ -10,7 +10,7 @@ function Home() {
   const [proList, setProList] = useState({ meta: {}, data: [] });
   const [loading, setLoading] = useState(false);
   let [searchParams, setSearchParams] = useSearchParams();
-
+  console.log(localStorage.getItem("token")); 
   const params = Object.fromEntries([...searchParams]);
 
   let { query, sort, page } = params;

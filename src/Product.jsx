@@ -9,7 +9,7 @@ function Product({ thumbnail, category, title, price, id }) {
       <div className="w-full h-52">
         <img 
           className="w-full h-full object-cover aspect-square" 
-          src={thumbnail || placeholder} 
+          src={ placeholder} 
           alt="product_img" 
         />
       </div>
