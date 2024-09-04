@@ -11,7 +11,6 @@ function Login({ user, setUser,setAlert }) {
   const from = location.state?.from?.pathname || "/"; // and if any previous path exist direct there or default to "/"
 
   function callLoginApi(values) {
-    console.log(values.email, values.password);
     axios
       .post("https://myeasykart.codeyogi.io/login", {
         email: values.email,

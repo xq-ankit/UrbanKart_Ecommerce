@@ -1,16 +1,23 @@
-import React,{useContext} from 'react';
+import React, { useContext } from 'react';
 import { LiaShoppingBagSolid } from "react-icons/lia";
 import { CiLogout } from "react-icons/ci";
-import { Link } from 'react-router-dom';
+import { PiSignInFill } from "react-icons/pi";
+import { Link, useNavigate } from 'react-router-dom';
 import withUser from './withUser';
 import { cartContext } from './contexts';
 
 function Navbar({ user, setUser }) {
-  const{cartcount}=useContext(cartContext);
-  const handelLogout = () => {
+  const { cartCount } = useContext(cartContext);
+  const navigate = useNavigate(); 
+  const handleLogout = () => {
     localStorage.removeItem("token");
     setUser(undefined);
-}
+  };
+
+  const handleSignIn = () => {
+    navigate("/sign-up");
+  };
+
   return (
     <div className="flex justify-between items-center px-4 sm:px-40 py-4 bg-white shadow-md z-50 min-w-full">
       <picture>
@@ -25,13 +32,35 @@ function Navbar({ user, setUser }) {
           alt="Logo"
         />
       </picture>
-      <button className='border rounded-full' onClick={handelLogout}><CiLogout /></button>
-      <div className="relative">
-     <Link to='/cart' ><LiaShoppingBagSolid className="text-3xl text-gray-800" /></Link>  
-        {cartcount > 0 && (
-          <span className="absolute -top-1 -right-2 inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-red-500 rounded-full">
-            {cartcount}
-          </span>
+
+      <div className="flex items-center space-x-6">
+        <div className="relative">
+          <Link to='/cart'>
+            <LiaShoppingBagSolid className="text-3xl text-gray-800" />
+          </Link>
+          {user && cartCount > 0 && (
+            <span className="absolute -top-1 -right-2 inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-red-500 rounded-full">
+              {cartCount}
+            </span>
+          )}
+        </div>
+        {!user && (
+          <button
+            className="flex items-center px-4 py-2 text-sm font-medium text-white bg-gray-800 rounded-full hover:bg-gray-700 focus:outline-none"
+            onClick={handleSignIn}
+          >
+            <PiSignInFill className="mr-2 text-xl" />
+            <span>Sign In</span>
+          </button>
+        )}
+        {user && (
+          <button
+            className="flex items-center px-4 py-2 text-sm font-medium text-white bg-gray-800 rounded-full hover:bg-gray-700 focus:outline-none"
+            onClick={handleLogout}
+          >
+            <CiLogout className="mr-2 text-xl" />
+            <span>Logout</span>
+          </button>
         )}
       </div>
     </div>

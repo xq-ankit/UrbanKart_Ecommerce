@@ -1,69 +1,24 @@
-import React, { useEffect, useState, useMemo, useContext } from "react";
-import { getProductData } from "./api";
+import React, { useContext } from "react";
 import { IoIosRemoveCircleOutline } from "react-icons/io";
 import LoadingPage from "./LoadingPage";
 import { Link } from "react-router-dom";
-import withUser from "./withUser";
 import { cartContext } from "./contexts";
+import withUser from "./withUser";
 
 function Cartpage() {
-  const { cartDetails, updateCart } = useContext(cartContext);
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const memoizedCart = useMemo(() => cartDetails, [cartDetails]);
-  const [localCart, setLocalCart] = useState(memoizedCart);
-  const productId = Object.keys(memoizedCart);
+  const { products, loading, subtotal, removeFromCart, onAddToCart, cartDetails } = useContext(cartContext);
 
-  useEffect(() => {
-    setLocalCart(memoizedCart);
-  }, [memoizedCart]);
-
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const myAllProductPromise = productId.map((id) => getProductData(id));
-        const productsData = await Promise.all(myAllProductPromise);
-        setProducts(productsData);
-      } catch (error) {
-        console.error("Failed to fetch products", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (productId.length > 0) {
-      fetchProducts();
-    } else {
-      setLoading(false);
-    }
-  }, [productId]);
-
-  function handleremove(productId) {
-    const newCart = { ...localCart };
-    delete newCart[productId];
-    updateCart(newCart);
-    setLocalCart(newCart);
-    if (Object.keys(newCart).length === 0) {
-      setProducts([]);
-    }
-  }
-
-  function updateMyCart() {
-    updateCart(localCart);
-  }
-
-  function handleChange(event) {
+  const handleChange = (event) => {
     const newVal = +event.target.value;
     const productId = event.target.getAttribute("productId");
-    const newLocalCart = { ...localCart, [productId]: newVal };
-    setLocalCart(newLocalCart);
-  }
+    onAddToCart(productId, newVal - cartDetails[productId]);
+  };
 
   if (loading) {
     return <LoadingPage />;
   }
 
-  const subtotal = products.reduce((acc, p) => acc + p.price * localCart[p.id], 0).toFixed(2);
+  const placeholder = "https://via.placeholder.com/500";
 
   return (
     <div className="h-screen items-center flex justify-center">
@@ -86,14 +41,13 @@ function Cartpage() {
                       <td className="p-4">
                         <div className="flex items-center">
                           <button
-                            productId={p.id}
-                            onClick={() => handleremove(p.id)}
+                            onClick={() => removeFromCart(p.id)}
                             className="text-red-500 mr-2"
                           >
                             <IoIosRemoveCircleOutline />
                           </button>
                           <img
-                            src={p.thumbnail}
+                            src={placeholder}
                             alt={p.title}
                             className="w-16 h-16 object-cover rounded mr-4"
                           />
@@ -104,7 +58,7 @@ function Cartpage() {
                       <td className="p-4">
                         <input
                           type="number"
-                          value={localCart[p.id]}
+                          value={cartDetails[p.id]}
                           onChange={handleChange}
                           min="1"
                           productId={p.id}
@@ -112,31 +66,12 @@ function Cartpage() {
                         />
                       </td>
                       <td className="p-4">
-                        ₹ {(p.price * localCart[p.id]).toFixed(2)}
+                        ₹ {(p.price * cartDetails[p.id]).toFixed(2)}
                       </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
-            </div>
-
-            <div className="flex flex-col md:flex-row justify-between items-center mt-6">
-              <div className="flex flex-col md:flex-row items-center mb-4 md:mb-0">
-                <input
-                  type="text"
-                  placeholder="Coupon code"
-                  className="border p-2 rounded mr-4 w-full md:w-64"
-                />
-                <button className="bg-red-500 text-white py-2 px-4 rounded mt-2 md:mt-0">
-                  APPLY COUPON
-                </button>
-              </div>
-              <button
-                className="bg-red-100 text-red-500 py-2 px-4 mx-2 rounded mt-2 md:mt-0"
-                onClick={updateMyCart}
-              >
-                UPDATE CART
-              </button>
             </div>
 
             <div className="bg-gray-100 p-6 mt-8 rounded-md ml-auto w-full md:w-2/3">
