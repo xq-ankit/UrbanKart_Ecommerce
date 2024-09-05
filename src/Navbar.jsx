@@ -44,6 +44,11 @@ function Navbar({ user, setUser }) {
             </span>
           )}
         </div>
+
+        {user && (
+          <span className="text-sm font-medium text-gray-800">
+            Welcome {user.full_name}!
+          </span>)}
         {!user && (
           <button
             className="flex items-center px-4 py-2 text-sm font-medium text-white bg-gray-800 rounded-full hover:bg-gray-700 focus:outline-none"
