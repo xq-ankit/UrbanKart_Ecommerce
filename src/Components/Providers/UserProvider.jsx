@@ -6,6 +6,7 @@ import LoadingPage from "../../LoadingPage.jsx";
 function UserProvider({ children }) {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // Declaring the state for isLoggedIn
   const token = localStorage.getItem("token");
 
   useEffect(() => {
@@ -18,10 +19,12 @@ function UserProvider({ children }) {
         })
         .then((response) => {
           setUser(response.data);
+          setIsLoggedIn(true); // here i am setting isLoggedIn to true if request is successful
           setLoading(false);
         })
         .catch(() => {
           localStorage.removeItem("token");
+          setIsLoggedIn(false); // else isLoggedIn to false if request fails
           setLoading(false);
         });
     } else {
@@ -34,7 +37,7 @@ function UserProvider({ children }) {
   }
 
   return (
-    <userContext.Provider value={{ isLoggedIn: !!token, user, setUser }}>
+    <userContext.Provider value={{ isLoggedIn, user, setUser }}>
       {children}
     </userContext.Provider>
   );
