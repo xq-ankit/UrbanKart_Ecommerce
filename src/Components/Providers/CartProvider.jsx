@@ -13,17 +13,28 @@ function CartProvider({ isLoggedIn, children }) {
       let cartData = {};
 
       if (isLoggedIn) {
-        cartData = await getCart();
+        // Fetch cart from the server if the user is logged in
+        try {
+          cartData = await getCart();
+        } catch (error) {
+          console.error("Error fetching cart from server:", error);
+        }
       } else {
+        // Otherwise, fetch cart from localStorage
         cartData = JSON.parse(localStorage.getItem("my-cart") || "{}");
       }
 
       setCartDetails(cartData);
 
+      // Fetch products by IDs if there are any items in the cart
       const productIds = Object.keys(cartData);
       if (productIds.length > 0) {
-        const productsData = await getProductByIds(productIds);
-        setProducts(productsData);
+        try {
+          const productsData = await getProductByIds(productIds);
+          setProducts(productsData);
+        } catch (error) {
+          console.error("Error fetching products:", error);
+        }
       } else {
         setProducts([]);
       }
@@ -37,18 +48,27 @@ function CartProvider({ isLoggedIn, children }) {
   const cartCount = Object.values(cartDetails).reduce((acc, curr) => acc + curr, 0);
   const subtotal = products.reduce((acc, p) => acc + p.price * cartDetails[p.id], 0).toFixed(2);
 
-  const updateCart = (newCartDetails) => {
+  const updateCart = async (newCartDetails) => {
     setCartDetails(newCartDetails);
 
     if (isLoggedIn) {
-      saveCart(newCartDetails);
+      try {
+        await saveCart(newCartDetails); // Save cart to the server
+      } catch (error) {
+        console.error("Error saving cart to server:", error);
+      }
     } else {
-      localStorage.setItem("my-cart", JSON.stringify(newCartDetails));
+      localStorage.setItem("my-cart", JSON.stringify(newCartDetails)); // Save cart to localStorage
     }
 
     const productIds = Object.keys(newCartDetails);
     if (productIds.length > 0) {
-      getProductByIds(productIds).then(setProducts);
+      try {
+        const productsData = await getProductByIds(productIds);
+        setProducts(productsData);
+      } catch (error) {
+        console.error("Error fetching updated products:", error);
+      }
     } else {
       setProducts([]);
     }
@@ -68,7 +88,16 @@ function CartProvider({ isLoggedIn, children }) {
 
   return (
     <cartContext.Provider
-      value={{ cartDetails, products, loading, cartCount, subtotal, onAddToCart, removeFromCart, updateCart }}
+      value={{
+        cartDetails,
+        products,
+        loading,
+        cartCount,
+        subtotal,
+        onAddToCart,
+        removeFromCart,
+        updateCart,
+      }}
     >
       {children}
     </cartContext.Provider>
